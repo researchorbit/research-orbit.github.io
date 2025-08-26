@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Orbit</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #2d3748;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links li {
+            position: relative;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #4a5568;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Dropdown Styles */
+        .dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            min-width: 200px;
+            z-index: 100;
+        }
+
+        .nav-links li:hover .dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown a {
+            display: block;
+            padding: 12px 20px;
+            color: #4a5568;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .dropdown a:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown a:hover {
+            background: #f7fafc;
+            color: #667eea;
+        }
+
+        /* Main Content */
+        main {
+            margin-top: 80px;
+            padding: 2rem 0;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .cta-button:hover {
+            background: white;
+            color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Content Sections */
+        .content-section {
+            display: none;
+            background: white;
+            margin: 2rem 0;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #4a5568;
+            text-align: justify;
+        }
+
+        .subsection {
+            margin-bottom: 3rem;
+        }
+
+        .subsection h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #2d3748;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: #f7fafc;
+            padding: 2rem;
+            border-radius: 16px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+            text-align: justify;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h4 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #2d3748;
+        }
+
+        /* Activities Section Styles */
+        .activities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+
+        .activity-card {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            border: 2px solid transparent;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .activity-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .activity-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+
+        .activity-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .activity-card:hover .activity-icon {
+            transform: scale(1.1);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .activity-card h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #2d3748;
+        }
+
+        .activity-content {
+            text-align: justify;
+        }
+
+        .activity-content p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #4a5568;
+            margin-bottom: 2rem;
+        }
+
+        .feature-list {
+            space-y: 1rem;
+        }
+
+        .feature-item {
+            background: #f7fafc;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            background: #edf2f7;
+            transform: translateX(5px);
+        }
+
+        .feature-item strong {
+            color: #2d3748;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Gradient Button Styles */
+        .upcoming-seminar-btn {
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .gradient-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gradient-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .gradient-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .gradient-btn:hover::before {
+            left: 100%;
+        }
+
+        .gradient-btn:active {
+            transform: translateY(0);
+        }
+
+        .gradient-btn svg {
+            transition: transform 0.3s ease;
+        }
+
+        .gradient-btn:hover svg {
+            transform: translateX(3px) translateY(-3px);
+        }
+
+        /* Social Media Styles */
+        .social-section {
+            margin-top: 4rem;
+            text-align: center;
+            padding: 3rem;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border-radius: 20px;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .social-section h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #2d3748;
+        }
+
+        .social-section p {
+            color: #4a5568;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .social-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .social-btn:hover::before {
+            left: 100%;
+        }
+
+        .social-btn.facebook {
+            background: linear-gradient(135deg, #1877f2, #42a5f5);
+            color: white;
+            box-shadow: 0 4px 15px rgba(24, 119, 242, 0.4);
+        }
+
+        .social-btn.facebook:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(24, 119, 242, 0.6);
+        }
+
+        .social-btn.youtube {
+            background: linear-gradient(135deg, #ff0000, #ff4444);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4);
+        }
+
+        .social-btn.youtube:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 0, 0, 0.6);
+        }
+
+        .social-btn svg {
+            transition: transform 0.3s ease;
+        }
+
+        .social-btn:hover svg {
+            transform: scale(1.1);
+        }
+
+        /* Mobile responsiveness for social buttons */
+        @media (max-width: 768px) {
+            .social-links {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .social-btn {
+                width: 200px;
+                justify-content: center;
+            }
+        }
+
+        /* Seminar Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            position: relative;
+            background: white;
+            margin: 5% auto;
+            padding: 0;
+            width: 90%;
+            max-width: 800px;
+            border-radius: 20px;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 2rem;
+            border-radius: 20px 20px 0 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .modal-header h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .modal-header p {
+            font-size: 1.1rem;
+            margin: 0.5rem 0 0 0;
+            opacity: 0.9;
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            color: white;
+            font-size: 35px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close:hover {
+            transform: scale(1.2);
+        }
+
+        .seminar-list {
+            padding: 2rem;
+        }
+
+        .seminar-item {
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .seminar-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .seminar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .seminar-date {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .seminar-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+            flex: 1;
+            margin-left: 1rem;
+            margin-right: 1rem;
+        }
+
+        .seminar-speaker {
+            color: #667eea;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .seminar-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            color: #4a5568;
+            font-size: 0.9rem;
+            flex-wrap: wrap;
+        }
+
+        .seminar-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .details-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .details-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+            }
+            
+            .seminar-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .seminar-title {
+                margin-left: 0;
+                margin-right: 0;
+            }
+            
+            .seminar-meta {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+
+        /* Mobile Styles */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .content-section {
+                padding: 2rem;
+                margin: 1rem 0;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 4rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">Research Orbit</div>
+            <ul class="nav-links">
+                <li>
+                    <a href="#" onclick="showSection('home')">Home</a>
+                    <div class="dropdown">
+                        <a href="#" onclick="showSubsection('about-us')">About Us</a>
+                        <a href="#" onclick="showSubsection('our-goal')">Our Goal</a>
+                    </div>
+                </li>
+                <li>
+                    <a href="#" onclick="showSection('activities')">Activities</a>
+                    <div class="dropdown">
+                        <a href="#" onclick="showSubsection('seminar')">Seminar</a>
+                        <a href="#" onclick="showSubsection('podcast')">Scholar Podcast</a>
+                        <a href="#" onclick="showSubsection('courses')">Courses</a>
+                    </div>
+                </li>
+                <li>
+                    <a href="#" onclick="showSection('team')">Our Team</a>
+                    <div class="dropdown">
+                        <a href="#" onclick="showSubsection('advisory-team')">Advisory Team</a>
+                        <a href="#" onclick="showSubsection('executive-team')">Executive Team</a>
+                    </div>
+                </li>
+                <li>
+                    <a href="#" onclick="showSection('contact')">Contact</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>Welcome to Research Orbit</h1>
+                <p>Redefine and Rebuild the Research Culture in Bangladesh</p>
+                <a href="#" class="cta-button" onclick="showSection('home')">Explore Our Work</a>
+            </div>
+        </section>
+
+        <div class="container">
+            <!-- Home Section -->
+            <section id="home" class="content-section active">
+                <h2 class="section-title">Home</h2>
+                
+                <div class="subsection" id="about-us">
+                    <h3>About Us</h3>
+                    <div class="section-content">
+                        <p>Research Orbit is a pioneering research organization dedicated to advancing knowledge across multiple disciplines. Founded on the principles of collaborative innovation and academic excellence, we bring together brilliant minds from around the world to tackle the most pressing challenges of our time.</p>
+                        
+                        <p>Our multidisciplinary approach combines cutting-edge technology with deep domain expertise, creating an environment where breakthrough discoveries flourish. We believe that the future of research lies in the intersection of different fields, where novel solutions emerge from unexpected connections.</p>
+                    </div>
+                </div>
+
+                <div class="subsection" id="our-goal">
+                    <h3>Our Goal</h3>
+                    <div class="section-content">
+                        <p>Our mission is to accelerate scientific progress and drive meaningful change through innovative research initiatives. We strive to:</p>
+                        
+                        <div class="grid">
+                            <div class="card">
+                                <h4>Foster Innovation</h4>
+                                <p>Create an ecosystem where groundbreaking ideas can flourish and transform into real-world solutions.</p>
+                            </div>
+                            <div class="card">
+                                <h4>Bridge Knowledge Gaps</h4>
+                                <p>Connect researchers across disciplines to promote cross-pollination of ideas and methodologies.</p>
+                            </div>
+                            <div class="card">
+                                <h4>Impact Society</h4>
+                                <p>Translate research outcomes into practical applications that benefit humanity and address global challenges.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Activities Section -->
+            <section id="activities" class="content-section">
+                <h2 class="section-title">Activities</h2>
+                
+                <div class="activities-grid">
+                    <div class="activity-card" id="seminar">
+                        <div class="activity-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM19 19H5V8H19V19Z" fill="currentColor"/>
+                                <path d="M7 10H17V12H7V10Z" fill="currentColor"/>
+                                <path d="M7 14H17V16H7V14Z" fill="currentColor"/>
+                                <circle cx="12" cy="5.5" r="1.5" fill="currentColor"/>
+                            </svg>
+                        </div>
+                        <h3>Seminar</h3>
+                        <div class="activity-content">
+                            <p>Our seminar series features world-renowned researchers, industry leaders, and emerging scholars presenting their latest findings and insights. These interactive sessions provide a platform for knowledge sharing and collaborative discussion.</p>
+                            
+                            <div class="upcoming-seminar-btn">
+                                <button class="gradient-btn" onclick="showUpcomingSeminars()">
+                                    <span>Upcoming Seminars</span>
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                        <path d="M7 17L17 7M17 7H7M17 7V17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            
+                            <div class="feature-list">
+                                <div class="feature-item">
+                                    <strong>Weekly Research Seminars:</strong> Regular presentations on cutting-edge research across various disciplines, featuring both internal and external speakers.
+                                </div>
+                                <div class="feature-item">
+                                    <strong>Industry Symposiums:</strong> Collaborative events bringing together academia and industry to discuss practical applications of research.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="activity-card" id="podcast">
+                        <div class="activity-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+                                <path d="M12 1v6m0 6v6" stroke="currentColor" stroke-width="2"/>
+                                <path d="m21 12-6-3v6l6-3z" stroke="currentColor" stroke-width="2"/>
+                                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                            </svg>
+                        </div>
+                        <h3>Scholar Podcast</h3>
+                        <div class="activity-content">
+                            <p>The Research Orbit Scholar Podcast features in-depth conversations with leading researchers, exploring their work, methodologies, and the stories behind their discoveries. Each episode provides insights into the research process and the human side of scientific inquiry.</p>
+                            
+                            <div class="feature-list">
+                                <div class="feature-item">
+                                    <strong>Monthly Episodes:</strong> Deep-dive interviews with researchers from diverse fields, discussing their current projects, challenges, and breakthrough moments. Available on all major podcast platforms.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="activity-card" id="courses">
+                        <div class="activity-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M22 10v6M2 10l10-5 10 5-10 5z" stroke="currentColor" stroke-width="2" fill="none"/>
+                                <path d="M6 12v5c3 3 9 3 12 0v-5" stroke="currentColor" stroke-width="2" fill="none"/>
+                            </svg>
+                        </div>
+                        <h3>Courses</h3>
+                        <div class="activity-content">
+                            <p>We offer comprehensive courses designed to enhance research skills and promote interdisciplinary learning. Our curriculum combines theoretical foundations with practical applications.</p>
+                            
+                            <div class="feature-list">
+                                <div class="feature-item">
+                                    <strong>Research Methodology:</strong> Comprehensive training in research design, data collection, analysis techniques, and scientific writing.
+                                </div>
+                                <div class="feature-item">
+                                    <strong>Interdisciplinary Workshops:</strong> Intensive workshops that bring together multiple disciplines to solve complex problems collaboratively.
+                                </div>
+                                <div class="feature-item">
+                                    <strong>Advanced Analytics:</strong> Cutting-edge courses in data science, machine learning, and statistical modeling for research applications.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Team Section -->
+            <section id="team" class="content-section">
+                <h2 class="section-title">Our Team</h2>
+                
+                <div class="subsection" id="advisory-team">
+                    <h3>Advisory Team</h3>
+                    <div class="section-content">
+                        <p>Our distinguished advisory team consists of internationally recognized experts who provide strategic guidance and ensure the highest standards of research excellence.</p>
+                        
+                        <div class="grid">
+                            <div class="card">
+                                <h4>Dr. Sarah Chen</h4>
+                                <p>Former Director of Research at MIT, specializing in artificial intelligence and machine learning applications in scientific research.</p>
+                            </div>
+                            <div class="card">
+                                <h4>Prof. Michael Rodriguez</h4>
+                                <p>Nobel Laureate in Chemistry, leading expert in sustainable materials and environmental science research.</p>
+                            </div>
+                            <div class="card">
+                                <h4>Dr. Amara Okafor</h4>
+                                <p>Renowned biomedical researcher and former WHO advisor, focusing on global health innovation and policy.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subsection" id="executive-team">
+                    <h3>Executive Team</h3>
+                    <div class="section-content">
+                        <p>Our executive team brings together diverse expertise in research management, operations, and strategic development to drive Research Orbit's mission forward.</p>
+                        
+                        <div class="grid">
+                            <div class="card">
+                                <h4>Dr. James Thompson</h4>
+                                <p>Chief Executive Officer - Leading Research Orbit's vision with over 20 years of experience in research administration and innovation management.</p>
+                            </div>
+                            <div class="card">
+                                <h4>Dr. Lisa Wang</h4>
+                                <p>Chief Research Officer - Overseeing all research initiatives and ensuring scientific rigor across all projects and collaborations.</p>
+                            </div>
+                            <div class="card">
+                                <h4>Maria Gonzalez</h4>
+                                <p>Chief Operations Officer - Managing day-to-day operations, partnerships, and organizational development initiatives.</p>
+                            </div>
+                            <div class="card">
+                                <h4>Dr. Robert Kim</h4>
+                                <p>Director of Innovation - Leading technology transfer, commercialization efforts, and industry collaboration programs.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contact Section -->
+            <section id="contact" class="content-section">
+                <h2 class="section-title">Contact</h2>
+                <div class="section-content">
+                    <p>We welcome inquiries from researchers, institutions, and organizations interested in collaboration or learning more about our work.</p>
+                    
+                    <div class="grid">
+                        <div class="card">
+                            <h4>General Inquiries</h4>
+                            <p>Email: info@researchorbit.org<br>
+                            Phone: +1 (555) 123-4567</p>
+                        </div>
+                        <div class="card">
+                            <h4>Research Collaboration</h4>
+                            <p>Email: collaborate@researchorbit.org<br>
+                            Phone: +1 (555) 123-4568</p>
+                        </div>
+                        <div class="card">
+                            <h4>Office Location</h4>
+                            <p>Research Orbit<br>
+                            123 Innovation Drive<br>
+                            Science Park, ST 12345</p>
+                        </div>
+                    </div>
+
+                    <div class="social-section">
+                        <h3>Follow Us for Updates</h3>
+                        <p>Stay connected with our latest research activities and discoveries</p>
+                        <div class="social-links">
+                            <a href="#" class="social-btn facebook" onclick="openSocialLink('facebook')">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                                </svg>
+                                <span>Facebook</span>
+                            </a>
+                            <a href="#" class="social-btn youtube" onclick="openSocialLink('youtube')">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                                </svg>
+                                <span>YouTube</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Seminar Modal -->
+    <div id="seminarModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close" onclick="closeSeminarModal()">&times;</span>
+                <h2>Upcoming Seminars</h2>
+                <p>Join us for cutting-edge research presentations</p>
+            </div>
+            <div class="seminar-list">
+                <div class="seminar-item">
+                    <div class="seminar-header">
+                        <div class="seminar-date">15 Mar 2025</div>
+                        <div class="seminar-title">Artificial Intelligence in Climate Research: Predicting Environmental Changes</div>
+                        <button class="details-btn" onclick="window.open('https://claude.ai/public/artifacts/36879faa-d1b6-4726-ac90-b783e8c72d0d', '_blank')">Details</button>
+                    </div>
+                    <div class="seminar-speaker">Dr. Sarah Chen, MIT</div>
+                    <div class="seminar-meta">
+                        <span>🕒 2:00 PM - 4:00 PM</span>
+                        <span>📍 Main Auditorium</span>
+                        <span>💻 Hybrid Event</span>
+                    </div>
+                </div>
+
+                <div class="seminar-item">
+                    <div class="seminar-header">
+                        <div class="seminar-date">22 Mar 2025</div>
+                        <div class="seminar-title">Quantum Computing Applications in Scientific Modeling</div>
+                        <button class="details-btn" onclick="showSeminarDetails('seminar2')">Details</button>
+                    </div>
+                    <div class="seminar-speaker">Prof. Michael Rodriguez, Nobel Laureate</div>
+                    <div class="seminar-meta">
+                        <span>🕒 3:00 PM - 5:00 PM</span>
+                        <span>📍 Conference Hall B</span>
+                        <span>💻 Online Available</span>
+                    </div>
+                </div>
+
+                <div class="seminar-item">
+                    <div class="seminar-header">
+                        <div class="seminar-date">29 Mar 2025</div>
+                        <div class="seminar-title">Biomedical Innovation and Healthcare Transformation in Bangladesh</div>
+                        <button class="details-btn" onclick="showSeminarDetails('seminar3')">Details</button>
+                    </div>
+                    <div class="seminar-speaker">Dr. Amara Okafor, WHO Advisor</div>
+                    <div class="seminar-meta">
+                        <span>🕒 10:00 AM - 12:00 PM</span>
+                        <span>📍 Medical Research Center</span>
+                        <span>📺 Live Stream</span>
+                    </div>
+                </div>
+
+                <div class="seminar-item">
+                    <div class="seminar-header">
+                        <div class="seminar-date">5 Apr 2025</div>
+                        <div class="seminar-title">Sustainable Energy Solutions: Solar and Wind Power Integration</div>
+                        <button class="details-btn" onclick="showSeminarDetails('seminar4')">Details</button>
+                    </div>
+                    <div class="seminar-speaker">Dr. Rahman Ahmed, BUET</div>
+                    <div class="seminar-meta">
+                        <span>🕒 1:00 PM - 3:00 PM</span>
+                        <span>📍 Engineering Auditorium</span>
+                        <span>🏢 In-Person Only</span>
+                    </div>
+                </div>
+
+                <div class="seminar-item">
+                    <div class="seminar-header">
+                        <div class="seminar-date">12 Apr 2025</div>
+                        <div class="seminar-title">Data Science Applications in Social Research</div>
+                        <button class="details-btn" onclick="showSeminarDetails('seminar5')">Details</button>
+                    </div>
+                    <div class="seminar-speaker">Prof. Lisa Wang, Harvard University</div>
+                    <div class="seminar-meta">
+                        <span>🕒 4:00 PM - 6:00 PM</span>
+                        <span>📍 Social Sciences Building</span>
+                        <span>💻 Hybrid Event</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Research Orbit. All rights reserved. Advancing knowledge through collaborative research.</p>
+        </div>
+    </footer>
+
+    <script>
+        function showSection(sectionName) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show the selected section
+            const targetSection = document.getElementById(sectionName);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+            
+            // Scroll to content
+            document.querySelector('main').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function showSubsection(subsectionId) {
+            // First determine which main section this subsection belongs to
+            let mainSection = '';
+            if (['about-us', 'our-goal'].includes(subsectionId)) {
+                mainSection = 'home';
+            } else if (['seminar', 'podcast', 'courses'].includes(subsectionId)) {
+                mainSection = 'activities';
+            } else if (['advisory-team', 'executive-team'].includes(subsectionId)) {
+                mainSection = 'team';
+            }
+            
+            // Show the main section first
+            showSection(mainSection);
+            
+            // Then scroll to the specific subsection
+            setTimeout(() => {
+                const subsection = document.getElementById(subsectionId);
+                if (subsection) {
+                    subsection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, 300);
+        }
+
+        function showUpcomingSeminars() {
+            document.getElementById('seminarModal').style.display = 'block';
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        }
+
+        function closeSeminarModal() {
+            document.getElementById('seminarModal').style.display = 'none';
+            document.body.style.overflow = 'auto'; // Re-enable background scrolling
+        }
+
+        function registerSeminar(seminarTitle) {
+            alert('🎓 Registration for "' + seminarTitle + '" seminar:\n\n📧 Email: seminars@researchorbit.org\n📞 Phone: +880-1234-567890\n\nPlease include:\n• Your name and affiliation\n• Contact information\n• Any dietary requirements\n\nConfirmation will be sent within 24 hours!');
+        }
+
+        function showSeminarDetails(seminarId) {
+            let details = '';
+            
+            switch(seminarId) {
+                case 'seminar1':
+                    details = '🤖 AI in Climate Research\n\n' +
+                              'Speaker: Dr. Sarah Chen, MIT\n' +
+                              'Date: March 15, 2025 | 2:00 PM - 4:00 PM\n\n' +
+                              'About: Explore how artificial intelligence is revolutionizing climate research and environmental predictions.\n\n' +
+                              '📍 Venue: Main Auditorium\n' +
+                              '💻 Zoom link will be provided upon registration\n' +
+                              '📧 Register: seminars@researchorbit.org';
+                    break;
+                case 'seminar2':
+                    details = '⚛️ Quantum Computing in Scientific Modeling\n\n' +
+                              'Speaker: Prof. Michael Rodriguez, Nobel Laureate\n' +
+                              'Date: March 22, 2025 | 3:00 PM - 5:00 PM\n\n' +
+                              'About: Discover quantum computing applications in complex scientific modeling and simulations.\n\n' +
+                              '📍 Venue: Conference Hall B\n' +
+                              '💻 Online participation available\n' +
+                              '📧 Register: seminars@researchorbit.org';
+                    break;
+                case 'seminar3':
+                    details = '🏥 Biomedical Innovation in Bangladesh\n\n' +
+                              'Speaker: Dr. Amara Okafor, WHO Advisor\n' +
+                              'Date: March 29, 2025 | 10:00 AM - 12:00 PM\n\n' +
+                              'About: Healthcare transformation and biomedical innovation opportunities in Bangladesh.\n\n' +
+                              '📍 Venue: Medical Research Center\n' +
+                              '📺 Live streaming available\n' +
+                              '📧 Register: seminars@researchorbit.org';
+                    break;
+                case 'seminar4':
+                    details = '🌱 Sustainable Energy Solutions\n\n' +
+                              'Speaker: Dr. Rahman Ahmed, BUET\n' +
+                              'Date: April 5, 2025 | 1:00 PM - 3:00 PM\n\n' +
+                              'About: Integration of solar and wind power solutions for sustainable energy systems.\n\n' +
+                              '📍 Venue: Engineering Auditorium\n' +
+                              '🏢 In-person attendance only\n' +
+                              '📧 Register: seminars@researchorbit.org';
+                    break;
+                case 'seminar5':
+                    details = '📊 Data Science in Social Research\n\n' +
+                              'Speaker: Prof. Lisa Wang, Harvard University\n' +
+                              'Date: April 12, 2025 | 4:00 PM - 6:00 PM\n\n' +
+                              'About: Applications of data science methodologies in social and behavioral research.\n\n' +
+                              '📍 Venue: Social Sciences Building\n' +
+                              '💻 Hybrid event - online and in-person\n' +
+                              '📧 Register: seminars@researchorbit.org';
+                    break;
+            }
+            
+            alert(details);
+        }
+
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            const modal = document.getElementById('seminarModal');
+            if (event.target === modal) {
+                closeSeminarModal();
+            }
+        }
+
+        function openSocialLink(platform) {
+            if (platform === 'facebook') {
+                alert('🔗 Visit our Facebook page for daily updates, research highlights, and community discussions!\n\nFacebook: @ResearchOrbitBD\n\nConnect with our research community and stay updated with our latest activities.');
+            } else if (platform === 'youtube') {
+                alert('🎥 Subscribe to our YouTube channel for research talks, seminar recordings, and educational content!\n\nYouTube: Research Orbit Bangladesh\n\nWatch exclusive interviews, research presentations, and behind-the-scenes content.');
+            }
+        }
+
+        // Add smooth scroll behavior for better UX
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add event listeners for any additional interactivity
+            console.log('Research Orbit website loaded successfully!');
+        });
+    </script>
+</body>
+</html>
